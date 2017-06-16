@@ -1,9 +1,11 @@
 package com.jun.weatherkotlinapp
 
 import android.content.pm.PackageManager
+import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtil
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     // Variable
     var mGoogleApiClient: GoogleApiClient? = null
-    var mLocationRequst: LocationRequest? = null
+    var mLocationRequest: LocationRequest? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,5 +79,37 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         return true
     }
 
+    override fun onConnected(p0: Bundle?) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        createLocationRequest()
+    }
 
+    private fun createLocationRequest() {
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.interval = 10000 // 10 seconds
+        mLocationRequest!!.fastestInterval = 5000 // 5 seconds
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED)
+        {
+            return
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this)
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+       mGoogleApiClient!!.connect()
+    }
+
+    override fun onLocationChanged(p0: Location?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        Log.i("Error", "Connection failed: "+p0.errorCode)
+
+    }
 }
