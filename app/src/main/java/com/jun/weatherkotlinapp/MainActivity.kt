@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
         setContentView(R.layout.activity_main)
 
         requestPermission();
+        if (checkPlayService())
+            buildGoogleApiClient()
     }
 
     private fun requestPermission() {
@@ -111,6 +113,22 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Log.i("Error", "Connection failed: "+p0.errorCode)
+    }
 
+    override fun onStart() {
+        super.onStart()
+        if (mGoogleApiClient != null)
+            mGoogleApiClient!!.connect()
+
+    }
+
+    override fun onDestroy() {
+        mGoogleApiClient!!.disconnect()
+        super.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPlayService()
     }
 }
