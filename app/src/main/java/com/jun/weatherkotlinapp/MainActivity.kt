@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener  {
     // Const
@@ -104,8 +105,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, G
        mGoogleApiClient!!.connect()
     }
 
-    override fun onLocationChanged(p0: Location?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onLocationChanged(location: Location?) {
+        txtLocation.text = "${location!!.latitude} - ${location!!.longitude}"
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
